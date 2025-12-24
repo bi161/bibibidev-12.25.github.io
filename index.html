@@ -6,20 +6,24 @@
 <title>크리스마스 편지</title>
 
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap" rel="stylesheet">
 
 <style>
-@font-face {
+    
+/*@font-face {
     font-family: 'GaramYeonkkot';
     src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2107@1.1/GaramYeonkkot.woff2') format('woff2');
     font-weight: normal;
     font-display: swap;
-}
+}*/
 
 body {
     margin: 0;
     background: #465d46;
     overflow: hidden;
-    font-family: 'GaramYeonkkot', serif;
+    font-family: 'Gowun Batang', serif;
 }
 
 #scene {
@@ -113,7 +117,7 @@ body {
     resize: none;
     border: none;
     background: transparent;
-    font-family: 'GaramYeonkkot', serif;
+    font-family: 'Gowun Batang', serif;
     font-size: clamp(14px, 3vw, 18px);
     line-height: 1.5;
     outline: none;
@@ -137,7 +141,7 @@ button {
     border-radius: 6px;
     background: #8b2f2f;
     color: white;
-    font-family: 'GaramYeonkkot', serif;
+    font-family: 'Gowun Batang', serif;
     font-size: 14px;
     cursor: pointer;
 }
@@ -221,13 +225,38 @@ window.onload = () => {
 };
 
 function saveImage() {
-    html2canvas(document.getElementById("scene")).then(canvas => {
+    const bodyStyle = window.getComputedStyle(document.body);
+
+    // 임시 래퍼 생성
+    const wrapper = document.createElement("div");
+    wrapper.style.position = "fixed";
+    wrapper.style.left = "0";
+    wrapper.style.top = "0";
+    wrapper.style.width = "100vw";
+    wrapper.style.height = "100vh";
+    wrapper.style.background = bodyStyle.background;
+    wrapper.style.zIndex = "-1";
+
+    // scene 복제
+    const clone = document.getElementById("scene").cloneNode(true);
+
+    wrapper.appendChild(clone);
+    document.body.appendChild(wrapper);
+
+    html2canvas(wrapper, {
+        useCORS: true,
+        backgroundColor: null
+    }).then(canvas => {
         const link = document.createElement("a");
         link.download = "편지.png";
-        link.href = canvas.toDataURL();
+        link.href = canvas.toDataURL("image/png");
         link.click();
+
+        // 정리
+        document.body.removeChild(wrapper);
     });
 }
+
 </script>
 </body>
 </html>
